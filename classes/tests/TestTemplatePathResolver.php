@@ -10,7 +10,7 @@ class TestTemplatePathResolver extends \WP_UnitTestCase {
 
     private $base_dir;
 
-    function setUp() {
+    function setup() {
         $this->path_resolver = new Arlima_TemplatePathResolver(null, false);
         $this->base_dir = basename(dirname(dirname(dirname(__FILE__))));
     }

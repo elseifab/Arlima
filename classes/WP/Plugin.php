@@ -40,9 +40,9 @@ class Arlima_WP_Plugin
         if( is_admin() ) {
 
             // Register install/uninstall procedures
-            register_activation_hook('arlima/arlima.php', 'Arlima_WP_Plugin::install');
-            register_deactivation_hook('arlima/arlima.php', 'Arlima_WP_Plugin::deactivate');
-            register_uninstall_hook('arlima/arlima.php', 'Arlima_WP_Plugin::uninstall');
+            register_activation_hook('wp-newslist/loader.php', 'Arlima_WP_Plugin::install');
+            register_deactivation_hook('wp-newslist/loader.php', 'Arlima_WP_Plugin::deactivate');
+            register_uninstall_hook('wp-newslist/loader.php', 'Arlima_WP_Plugin::uninstall');
 
             // Add actions and filters used in wp-admin
             $this->initAdminActions();

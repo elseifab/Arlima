@@ -10,6 +10,7 @@ class ExportImportBase extends \WP_UnitTestCase {
         if( empty($posts) ) {
             self::$some_post_id = wp_insert_post([
                 'post_title' => 'TEST',
+                'post_content' => '<p>Lorem Ipsum</p>',
                 'post_type' => 'post',
                 'post_status' => 'publish',
             ]);

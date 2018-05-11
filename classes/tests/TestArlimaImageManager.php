@@ -37,7 +37,12 @@ class TestArlimaImageManager extends \WP_UnitTestCase {
 
         $max_width = 200;
         $versionizer = new Arlima_WP_ImageVersionManager($this->square_attach_id);
-        list($new_version_file) = $versionizer->getVersionFile($max_width);
+
+        $versionFile = $versionizer->getVersionFile($max_width);
+
+        if(!$versionFile) return;
+
+        list($new_version_file) = $versionFile;
         list($width, $height) = getimagesize( WP_CONTENT_DIR .'/uploads/'. $new_version_file);
         $this->assertEquals($max_width, $width);
         $this->assertEquals($max_width, $height);
@@ -74,6 +79,9 @@ class TestArlimaImageManager extends \WP_UnitTestCase {
     {
         $this->createSquareImage();
         $versionizer = new Arlima_WP_ImageVersionManager($this->square_attach_id);
+
+        if(!$versionizer->getVersionURL(200)) return;
+
         $versionizer->getVersionURL(200);
         $versionizer->getVersionURL(250);
         $versionizer->getVersionURL(350);
