@@ -1,9 +1,9 @@
 <?php
 
 // Paths
-define('ARLIMA_PLUGIN_PATH', plugin_dir_path(__FILE__));
-
+define('ARLIMA_PLUGIN_PATH', __DIR__);
 define('ARLIMA_PLUGIN_URL', plugin_dir_url(__FILE__));
+
 defined('ARLIMA_CLASS_PATH')
     or define('ARLIMA_CLASS_PATH', ARLIMA_PLUGIN_PATH.'/classes');
 

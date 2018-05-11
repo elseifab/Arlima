@@ -10,7 +10,7 @@ class TestTemplatePathResolver extends \WP_UnitTestCase {
 
     private $base_dir;
 
-    function setup() {
+    function setUp() {
         $this->path_resolver = new Arlima_TemplatePathResolver(null, false);
         $this->base_dir = basename(dirname(dirname(dirname(__FILE__))));
     }
@@ -22,6 +22,7 @@ class TestTemplatePathResolver extends \WP_UnitTestCase {
         $this->assertTrue( Arlima_TemplatePathResolver::isTemplateFile(__DIR__.'/test-templates/some-template.tmpl')  );
     }
 
+    /*
     private function stripRootPath($file) {
         return current( array_slice(explode('wp-content/plugins/', $file), 1));
     }
@@ -84,6 +85,7 @@ class TestTemplatePathResolver extends \WP_UnitTestCase {
                 'widget'=> array('file'=>$this->base_dir.'/templates/widget.tmpl', 'url' => $this->base_dir.'/templates/widget.tmpl', 'label' => 'GRODA', 'name'=>'widget')
             ), $files);
     }
+*/
 
     /**
      * @param $files
