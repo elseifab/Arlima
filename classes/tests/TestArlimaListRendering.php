@@ -1,6 +1,6 @@
 <?php
 
-class TestArlimaListRendering extends PHPUnit_Framework_TestCase {
+class TestArlimaListRendering extends \WP_UnitTestCase {
 
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-class TestArlimaListFactory extends PHPUnit_Framework_TestCase {
+class TestArlimaListFactory extends \WP_UnitTestCase {
 
     /**
      * @var Arlima_ListFactory

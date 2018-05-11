@@ -5,7 +5,7 @@
  * @todo: Write tests for images
  * @todo: Write tests for streamers
  */
-class TestTemplateObjectCreator extends PHPUnit_Framework_TestCase {
+class TestTemplateObjectCreator extends \WP_UnitTestCase {
 
     function testCreator() {
 

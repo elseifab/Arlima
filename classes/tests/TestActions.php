@@ -1,7 +1,7 @@
 <?php
 
 
-class TestActions extends PHPUnit_Framework_TestCase {
+class TestActions extends \WP_UnitTestCase {
 
     function setUp() {
         remove_all_filters('arlima_article_begin');

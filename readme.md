@@ -1,8 +1,44 @@
-> **!! NOTICE !!** The master branch of this repository is not intended for use in production.
-
-
-Arlima 3.0
+wp-newslist
 ======
+
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/elseifab/wp-newslist.git)
+[![Build Status](https://travis-ci.org/elseifab/wp-newslist.svg?branch=master)](https://travis-ci.org/elseifab/wp-newslist)
+[![GitHub release](https://img.shields.io/github/release/elseifab/wp-newslist.svg)](https://github.com/elseifab/wp-newslist/archive/master.zip)
+
+THIS IS A FORK FROM ARLIMA (https://github.com/victorjonsson/Arlima)
+
+**WORK IN PROGRESS**
+
+The plugin license is converted to MIT.
+
+The plugin in is intended to be backwards compatible with Arlima but with the following requirements:
+
+* PHP version 7 and above.
+* WordPress version 4.9 and above.
+
+This is an open source project meaning that the time spent on this project will vary and contributions are welcome.
+
+Some rewrites will be done as first version 3.2 planned as first stable release.
+
+### PHPUnit
+Attention! `composer update` before any unit testing!
+
+We run docker containers to unit tests in real WordPress (no mock).
+[https://github.com/frozzare/docker-wptest](https://github.com/frozzare/docker-wptest)
+[https://github.com/wpup/test-suite](https://github.com/wpup/test-suite)
+Special thanks to Frozzare!
+
+To initialize tests with docker, run: `docker run --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=true -d mysql:latest`
+
+To run tests, in the plugin folder, eg: `docker run -e WP_VERSION=4.9 --rm -v $(pwd):/opt --link mysql frozzare/wptest:7.0 vendor/bin/phpunit`
+
+PHPUnit testing with docker:
+[https://youtu.be/9CEoapNrrSc](Video)
+
+
+---
+
+# Arlima inherited readme text:
 
 *This Wordpress plugin was created by Swedish newspaper Västerbottens-Kuriren to give its editorial
 staff an easy to use tool for customizing the front pages of their online magazines. It's 

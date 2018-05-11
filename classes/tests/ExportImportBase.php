@@ -1,16 +1,23 @@
 <?php
 
 
-class ExportImportBase extends PHPUnit_Framework_TestCase {
+class ExportImportBase extends \WP_UnitTestCase {
 
     protected static $some_post_id;
 
     static function setUpBeforeClass() {
         $posts = get_posts(array('numberposts'=>1));
         if( empty($posts) ) {
-            throw new Exception('The wp installation has to have at least one post in order to run this test');
+            self::$some_post_id = wp_insert_post([
+                'post_title' => 'TEST',
+                'post_type' => 'post',
+                'post_status' => 'publish',
+            ]);
+            //throw new Exception('The wp installation has to have at least one post in order to run this test');
         }
-        self::$some_post_id = $posts[0]->ID;
+        else {
+            self::$some_post_id = $posts[0]->ID;
+        }
     }
 
     /**

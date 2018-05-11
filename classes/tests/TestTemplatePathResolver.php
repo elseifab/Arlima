@@ -1,7 +1,7 @@
 <?php
 
 
-class TestTemplatePathResolver extends PHPUnit_Framework_TestCase {
+class TestTemplatePathResolver extends \WP_UnitTestCase {
 
     /**
      * @var Arlima_TemplatePathResolver

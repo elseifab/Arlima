@@ -966,7 +966,6 @@ class Arlima_WP_Plugin
     public static function classLoader($class)
     {
         if ( strpos($class, 'Arlima_') === 0 ) {
-
             require_once ARLIMA_CLASS_PATH . '/' . str_replace('_', '/', substr($class, 7)) . '.php';
         }
         elseif (strpos($class, 'Mustache') === 0) {
