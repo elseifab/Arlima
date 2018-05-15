@@ -344,10 +344,7 @@ class Arlima_WP_Ajax
     {
         $this->initAjaxRequest();
 
-        global $current_user;
-        get_currentuserinfo();
-
-        $setup = get_user_meta($current_user->ID, 'arlima-list-setup', true);
+        $setup = get_user_meta(wp_get_current_user()->ID, 'arlima-list-setup', true);
         if (!$setup) {
             $setup = array();
         }
@@ -361,15 +358,12 @@ class Arlima_WP_Ajax
     {
         $this->initAjaxRequest();
 
-        global $current_user;
-        get_currentuserinfo();
-
         $lists = isset($_POST['lists']) ? $_POST['lists'] : null;
 
         if ($lists) {
-            update_user_meta($current_user->ID, 'arlima-list-setup', $lists);
+            update_user_meta(wp_get_current_user()->ID, 'arlima-list-setup', $lists);
         } else {
-            delete_user_meta($current_user->ID, 'arlima-list-setup');
+            delete_user_meta(wp_get_current_user()->ID, 'arlima-list-setup');
         }
 
         die(json_encode(array()));
@@ -399,7 +393,6 @@ class Arlima_WP_Ajax
         $this->initAjaxRequest();
 
         global $post;
-        get_currentuserinfo();
 
         $list_id = isset($_POST['alid']) ? intval($_POST['alid']) : false;
         $post_id = isset($_POST['postid']) ? intval($_POST['postid']) : false;
