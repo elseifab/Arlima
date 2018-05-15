@@ -255,12 +255,12 @@ module.exports = function(grunt) {
      * Default task - creates a new release version
      */
     var defaultTasks = [
-        'phpunit',
+        //'phpunit',
         'validate-js',
         'validate-readme',
         'change-version',
-        'localization',
-        'create-docs',
+        //'localization',
+        //'create-docs',
         'less',
         'concat',
         'uglify'

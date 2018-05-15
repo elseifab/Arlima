@@ -1,7 +1,7 @@
 {
     "name": "arlima-release-build-tools",
-    "description" : "This package definition lets you install the build tools necessary to create an Arlima release",
-    "version" : "1.0.0",
+    "description": "This package definition lets you install the build tools necessary to create an Arlima release",
+    "version": "1.0.0",
     "devDependencies": {
         "grunt": "~0.4.2",
         "wrench": ">=0.1.0",
@@ -10,9 +10,9 @@
         "grunt-contrib-less": "~0.5.0",
         "mval": "1.1.6"
     },
-    "gruntConfig" : {
-        "mainScript" : "arlima.php",
-        "excludeFromRelease" : [
+    "gruntConfig": {
+        "mainScript": "loader.php",
+        "excludeFromRelease": [
             "node_modules",
             "vendor",
             "dist",
@@ -26,11 +26,11 @@
             "test.php",
             ".git"
         ],
-        "lessFiles" : {
-            "css/admin.css" : "css/admin.less"
+        "lessFiles": {
+            "css/admin.css": "css/admin.less"
         },
-        "filesToConcat" : {
-            "js/arlima/arlima.js" : [
+        "filesToConcat": {
+            "js/arlima/arlima.js": [
                 "js/arlima/dev/ArlimaUtils.js",
                 "js/arlima/dev/ArlimaBackend.js",
                 "js/arlima/dev/ArlimaFormBuilder.js",
@@ -58,8 +58,8 @@
                 "js/arlima/dev/ArlimaTinyMCE.js"
             ]
         },
-        "uglifyjs" : {
-            "js/arlima/arlima.js" : "js/arlima/arlima.js"
+        "uglifyjs": {
+            "js/arlima/arlima.js": "js/arlima/arlima.js"
         }
     }
 }

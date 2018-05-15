@@ -118,11 +118,19 @@ abstract class Arlima_WP_AbstractAdminPage {
         } else {
             add_menu_page(
                 $this->getName(),
-                $this->getMenuName(),
+                $this->getName(),
                 $this->capability(),
                 $this->slug(),
                 array($this, 'loadPage'),
-                $this->icon()
+                'dashicons-exerpt-view'
+            );
+            add_submenu_page(
+                $this->slug(),
+                $this->getName(),
+                $this->getMenuName(),
+                $this->capability(),
+                $this->slug(),
+                array($this, 'loadPage')
             );
         }
 
@@ -259,10 +267,8 @@ abstract class Arlima_WP_AbstractAdminPage {
         ?>
         <div class="wrap arlima <?php echo $this->slug() ?>">
             <h2 class="arlima-page-title">
-                <img src="<?php echo ARLIMA_PLUGIN_URL.'/images/logo.png' ?>" width="142" alt="Arlima" />
-                <?php if($this->slug() != Arlima_WP_Page_Main::PAGE_SLUG): ?>
+                WP Newslist
                     <span>| <?php echo $this->getMenuName() ?></span>
-                <?php endif; ?>
             </h2>
             <?php require ARLIMA_PLUGIN_PATH . '/pages/' . str_replace('arlima-', '', $this->slug()) . '.php'; ?>
         </div>

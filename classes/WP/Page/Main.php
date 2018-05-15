@@ -260,7 +260,7 @@ class Arlima_WP_Page_Main extends Arlima_WP_AbstractAdminPage {
 
     function getName()
     {
-        return __('Article List Manager', 'arlima');
+        return __('Newslist', 'arlima');
     }
 
     function getMenuName()

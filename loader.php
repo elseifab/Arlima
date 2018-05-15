@@ -1,6 +1,7 @@
 <?php
 /*
  * Plugin Name: wp-newslist
+ * Version: 3.08
  * GitHub Plugin URI: elseifab/wp-newslist
  */
 
