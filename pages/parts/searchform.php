@@ -8,7 +8,7 @@
             echo "<option value=\"\">" . __('Select posttype', 'arlima') . "</option>";
             $allPosttypes = get_post_types([], 'objects');
             foreach ($allPosttypes as $posttype) {
-                if (in_array($posttype->name, $posttypes)) {
+                if (property_exists($posttype, 'name') && in_array($posttype->name, $posttypes)) {
                     echo "<option value=\"" . $posttype->name ."\">", $posttype->label, "</option>";
                 }
             }
