@@ -403,37 +403,7 @@ $cms = Arlima_CMSFacade::load();
                 <div class="collapse-toggle open"><br/></div>
                 <h3><span><?php _e('Articles', 'arlima') ?></span></h3>
                 <div class="inside">
-                    <div class="search-wrapper">
-                        <form action="#">
-                            <?php
-                            $args = array(
-                                'orderby' => 'name',
-                                'show_option_all' => __('All categories', 'arlima'),
-                                'name' => 'catid',
-                                'id' => 'arlima-posts-category'
-                            );
-                            wp_dropdown_categories(apply_filters('arlima_dropdown_categories', $args));
-
-                            $args = array(
-                                'show_option_all' => __('All authors', 'arlima'),
-                                'name' => 'author',
-                                'id' => 'arlima-posts-author',
-                                'who' => 'authors',
-                                'show' => 'display_name'
-                            );
-                            wp_dropdown_users($args);
-                            ?>
-                            <input type="text" name="search" id="arlima-posts-search"
-                                   placeholder="<?php _e('Search word', 'arlima') ?>"/>
-                            <input class="button-secondary action" type="submit"
-                                   value="<?php _e('Search', 'arlima') ?>"/>
-                            <img src="<?php echo ARLIMA_PLUGIN_URL . '/images/ajax-loader-trans.gif'; ?>"
-                                 class="ajax-loader"/>
-                            <div class="search-opts">
-                                <?php Arlima_PostSearchModifier::invokeFormCallbacks() ?>
-                            </div>
-                        </form>
-                    </div>
+                    <?php include __DIR__ . DIRECTORY_SEPARATOR . 'parts' . DIRECTORY_SEPARATOR . 'searchform.php'; ?>
                     <table class="widefat search-result">
                         <thead>
                         <tr>

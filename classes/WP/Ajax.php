@@ -63,7 +63,7 @@ class Arlima_WP_Ajax
 
         // The following action is not possible to hook into wtf???
         // add_action('wp_ajax_image-editor', array($this, 'removeImageVersions'));
-        if ( $this->isSavingEditedImage() ) {
+        if ($this->isSavingEditedImage()) {
             add_action('init', array($this, 'removeImageVersions'));
         }
     }
@@ -72,31 +72,29 @@ class Arlima_WP_Ajax
     {
         $this->initAjaxRequest();
         $log = sprintf('Arlima JS -> Message: %s, User: %s, File: %s, Line: %s, Stack: %s',
-                    $_POST['message'],
-                    wp_get_current_user()->display_name,
-                    $_POST['file'],
-                    $_POST['line'],
-                    $_POST['stack']);
+            $_POST['message'],
+            wp_get_current_user()->display_name,
+            $_POST['file'],
+            $_POST['line'],
+            $_POST['stack']);
 
-        die(json_encode(array('log'=>'saved')));
+        die(json_encode(array('log' => 'saved')));
     }
 
     public function updateArticle()
     {
         $this->initAjaxRequest();
-        if( empty($_POST['ala_id']) ) {
-            die(json_encode(array('error'=>'No ala_id given')));
-        }
-        elseif( empty($_POST['update']) ) {
-            die(json_encode(array('error'=>'Nothing to update')));
-        }
-        else {
+        if (empty($_POST['ala_id'])) {
+            die(json_encode(array('error' => 'No ala_id given')));
+        } elseif (empty($_POST['update'])) {
+            die(json_encode(array('error' => 'Nothing to update')));
+        } else {
             try {
                 $ver_repo = new Arlima_ListVersionRepository();
                 $ver_repo->updateArticle($_POST['ala_id'], $_POST['update']);
-                die(json_encode(array('success'=>1)));
-            } catch(Exception $e) {
-                die(json_encode(array('error'=>$e->getMessage())));
+                die(json_encode(array('success' => 1)));
+            } catch (Exception $e) {
+                die(json_encode(array('error' => $e->getMessage())));
             }
         }
     }
@@ -109,13 +107,13 @@ class Arlima_WP_Ajax
     private function isSavingEditedImage()
     {
         return isset($_POST['action']) &&
-                isset($_POST['postid']) &&
-                isset($_POST['do']) &&
-                isset($_POST['context']) &&
-                $_POST['action'] == 'image-editor' &&
-                $_POST['do'] == 'save' &&
-                $_POST['context'] == 'edit-attachment' &&
-                basename($_SERVER['PHP_SELF']) == 'admin-ajax.php';
+            isset($_POST['postid']) &&
+            isset($_POST['do']) &&
+            isset($_POST['context']) &&
+            $_POST['action'] == 'image-editor' &&
+            $_POST['do'] == 'save' &&
+            $_POST['context'] == 'edit-attachment' &&
+            basename($_SERVER['PHP_SELF']) == 'admin-ajax.php';
     }
 
     /**
@@ -124,18 +122,15 @@ class Arlima_WP_Ajax
     public function removeImageVersions()
     {
         // Arlima admin request
-        if( !empty($_POST['attachment']) ) {
+        if (!empty($_POST['attachment'])) {
             $this->initAjaxRequest();
             Arlima_WP_ImageVersionManager::removeVersions($_POST['attachment']);
-            die( json_encode(array('success'=>true)));
-        }
-
-        // image editor in wp-admin
-        elseif( !empty($_POST['postid']) && is_user_logged_in() ) {
+            die(json_encode(array('success' => true)));
+        } // image editor in wp-admin
+        elseif (!empty($_POST['postid']) && is_user_logged_in()) {
             Arlima_WP_ImageVersionManager::removeVersions($_POST['postid']);
-        }
-        else {
-            die( json_encode(array('error'=>'No attachment given')) );
+        } else {
+            die(json_encode(array('error' => 'No attachment given')));
         }
     }
 
@@ -164,11 +159,11 @@ class Arlima_WP_Ajax
         $this->initAjaxRequest();
         try {
             $attachment_id = intval($_POST['attachment']);
-            if ( $attachment_id ) {
-                $file = get_post_meta( $attachment_id, '_wp_attached_file', true );
-                if( $file ) {
-                    $tmp_file = get_temp_dir().'/'.uniqid();
-                    copy(WP_CONTENT_DIR .'/uploads/'. $file, $tmp_file);
+            if ($attachment_id) {
+                $file = get_post_meta($attachment_id, '_wp_attached_file', true);
+                if ($file) {
+                    $tmp_file = get_temp_dir() . '/' . uniqid();
+                    copy(WP_CONTENT_DIR . '/uploads/' . $file, $tmp_file);
                     $new_attach_id = Arlima_WP_Plugin::saveImageFileAsAttachment($tmp_file, basename($file), '');
                     list($attach_url) = wp_get_attachment_image_src($new_attach_id, 'default');
 
@@ -184,7 +179,7 @@ class Arlima_WP_Ajax
                 throw new Exception('File does not exist');
             }
 
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             echo json_encode(
                 array(
                     'attach_id' => -1,
@@ -228,7 +223,7 @@ class Arlima_WP_Ajax
         // Make it possible for theme to override templates
         // @todo: rename from template to preset
         $templates = apply_filters('arlima_teaser_templates', $templates);
-        foreach($templates as $key => $data) {
+        foreach ($templates as $key => $data) {
             $templates[$key] = Arlima_ListVersionRepository::createArticle($data)->toArray();
         }
 
@@ -239,34 +234,35 @@ class Arlima_WP_Ajax
     /**
      * Check logged in and correct nonce
      */
-    private function initAjaxRequest($send_json=true)
+    private function initAjaxRequest($send_json = true)
     {
-        if( $send_json ) {
+        if ($send_json) {
             header('Content-Type: application/json');
-            header('X-Arlima-Version: '.ARLIMA_FILE_VERSION);
+            header('X-Arlima-Version: ' . ARLIMA_FILE_VERSION);
         }
 
-        if( !check_ajax_referer('arlima-nonce') ) {
+        if (!check_ajax_referer('arlima-nonce')) {
             die(json_encode(array('error' => 'incorrect nonce')));
-        } elseif( !is_user_logged_in() ) {
+        } elseif (!is_user_logged_in()) {
             die(json_encode(array('error' => 'not logged in')));
         }
     }
 
-    function saveImage() {
+    function saveImage()
+    {
         $this->initAjaxRequest();
 
         try {
             $id = Arlima_WP_Plugin::saveImageAsAttachment(
-                        $_POST['image'],
-                        $_POST['name'],
-                        empty($_POST['postid']) ? '':$_POST['postid']
-                    );
+                $_POST['image'],
+                $_POST['name'],
+                empty($_POST['postid']) ? '' : $_POST['postid']
+            );
 
-            die(json_encode(array('attachment'=>$id, 'url'=>current(wp_get_attachment_image_src($id, 'full')))));
+            die(json_encode(array('attachment' => $id, 'url' => current(wp_get_attachment_image_src($id, 'full')))));
 
-        } catch(Exception $e) {
-            die(json_encode(array('error' =>$e->getMessage())));
+        } catch (Exception $e) {
+            die(json_encode(array('error' => $e->getMessage())));
         }
     }
 
@@ -277,7 +273,7 @@ class Arlima_WP_Ajax
     {
         $this->initAjaxRequest();
 
-        if ( !function_exists('wp_generate_attachment_metadata') ) {
+        if (!function_exists('wp_generate_attachment_metadata')) {
             require_once(ABSPATH . "wp-admin" . '/includes/image.php');
             require_once(ABSPATH . "wp-admin" . '/includes/file.php');
             require_once(ABSPATH . "wp-admin" . '/includes/media.php');
@@ -285,7 +281,7 @@ class Arlima_WP_Ajax
 
         $post_id = intval($_POST['postid']);
 
-        if ( $post_id ) {
+        if ($post_id) {
 
             media_sideload_image(urldecode($_POST['imgurl']), $post_id, '');
 
@@ -303,32 +299,32 @@ class Arlima_WP_Ajax
             $attach_id = $attachments[0]->ID;
 
         } else {
-            $url = current(explode('?', $_POST[ 'imgurl' ]));
-            $tmp = download_url( $url );
+            $url = current(explode('?', $_POST['imgurl']));
+            $tmp = download_url($url);
             $file_array = array(
-                'name' => basename( $url ),
+                'name' => basename($url),
                 'tmp_name' => $tmp
             );
 
             /* @var WP_Error|string $tmp */
             // Check for download errors
-            if ( is_wp_error( $tmp ) ) {
-                @unlink( $file_array[ 'tmp_name' ] );
-                die( json_encode( array( 'error' => $tmp->get_error_messages() ) ) );
+            if (is_wp_error($tmp)) {
+                @unlink($file_array['tmp_name']);
+                die(json_encode(array('error' => $tmp->get_error_messages())));
             }
 
-            $attach_id = media_handle_sideload( $file_array, 0 );
+            $attach_id = media_handle_sideload($file_array, 0);
 
             // Check for handle sideload errors.
-            if ( is_wp_error( $attach_id ) ) {
-                @unlink( $file_array['tmp_name'] );
-                die( json_encode( array( 'error' => $attach_id->get_error_messages() ) ) );
+            if (is_wp_error($attach_id)) {
+                @unlink($file_array['tmp_name']);
+                die(json_encode(array('error' => $attach_id->get_error_messages())));
             }
 
         }
 
 
-        if ( empty($attach_id) ) {
+        if (empty($attach_id)) {
             die(json_encode(array('error' => 'no attach_id')));
         }
 
@@ -352,7 +348,7 @@ class Arlima_WP_Ajax
         get_currentuserinfo();
 
         $setup = get_user_meta($current_user->ID, 'arlima-list-setup', true);
-        if ( !$setup ) {
+        if (!$setup) {
             $setup = array();
         }
         die(json_encode($setup));
@@ -370,7 +366,7 @@ class Arlima_WP_Ajax
 
         $lists = isset($_POST['lists']) ? $_POST['lists'] : null;
 
-        if ( $lists ) {
+        if ($lists) {
             update_user_meta($current_user->ID, 'arlima-list-setup', $lists);
         } else {
             delete_user_meta($current_user->ID, 'arlima-list-setup');
@@ -387,7 +383,7 @@ class Arlima_WP_Ajax
         $this->initAjaxRequest();
 
         $version_id = isset($_POST['alvid']) ? $_POST['alvid'] : null;
-        if( $version_id ) {
+        if ($version_id) {
             $ver_repo = new Arlima_ListVersionRepository();
             $ver_repo->delete($version_id);
         }
@@ -408,16 +404,16 @@ class Arlima_WP_Ajax
         $list_id = isset($_POST['alid']) ? intval($_POST['alid']) : false;
         $post_id = isset($_POST['postid']) ? intval($_POST['postid']) : false;
 
-        if ( $list_id && $post_id ) {
+        if ($list_id && $post_id) {
 
             $post = get_post($post_id);
             setup_postdata($post);
             $GLOBALS['post'] = $post; // Something is removing post from global, even though we call setup_postdata
 
             $list = Arlima_List::builder()
-                        ->id($list_id)
-                        ->includeFutureArticles()
-                        ->build();
+                ->id($list_id)
+                ->includeFutureArticles()
+                ->build();
 
             $articles = $list->getArticles();
 
@@ -433,7 +429,8 @@ class Arlima_WP_Ajax
     /**
      * Update a specific version of a list
      */
-    function updateListVersion() {
+    function updateListVersion()
+    {
         $this->initAjaxRequest();
         $list_repo = new Arlima_ListRepository();
         $ver_repo = new Arlima_ListVersionRepository();
@@ -456,7 +453,7 @@ class Arlima_WP_Ajax
         $schedule_time = !empty($_POST['scheduleTime']) ? intval($_POST['scheduleTime']) : 0;
         $preview = !$schedule_time && isset($_POST['preview']);
 
-        if ( $list_id ) {
+        if ($list_id) {
             $articles = $this->getArticlesFromRequest();
             $this->saveAndOutputList($list_id, $articles, $schedule_time, $preview);
         }
@@ -474,18 +471,18 @@ class Arlima_WP_Ajax
         $list_repo = new Arlima_ListRepository();
         $ver_repo = new Arlima_ListVersionRepository();
 
-        if ( $list_id instanceof Arlima_List ) {
+        if ($list_id instanceof Arlima_List) {
             $list = $list_id;
         } else {
             $list = $list_repo->load($list_id);
         }
 
         $user_id = get_current_user_id();
-        if( $schedule_time ) {
+        if ($schedule_time) {
             $version_id = $ver_repo->createScheduledVersion($list, $articles, $user_id, $schedule_time);
         } else {
             $version_id = $ver_repo->create($list, $articles, $user_id, $preview);
-            if( $preview ) {
+            if ($preview) {
                 $version_id = 'preview';
             }
         }
@@ -503,11 +500,11 @@ class Arlima_WP_Ajax
         $list_id = isset($_POST['alid']) ? (int)$_POST['alid'] : false;
         $version = isset($_POST['version']) ? (int)$_POST['version'] : false;
 
-        if ( $list_id && $version ) {
+        if ($list_id && $version) {
 
             $list = Arlima_List::builder()->id($list_id)->build();
 
-            if ( $list->getVersionAttribute('id') > $version ) {
+            if ($list->getVersionAttribute('id') > $version) {
                 echo json_encode(
                     array(
                         'version' => $list->getVersion(),
@@ -521,7 +518,7 @@ class Arlima_WP_Ajax
         echo json_encode(array('version' => false));
         die;
     }
-    
+
     /**
      * Fetches an arlima list and outputs it in widget form
      */
@@ -533,9 +530,9 @@ class Arlima_WP_Ajax
         $list_id = isset($_POST['alid']) ? trim($_POST['alid']) : null;
         $version = isset($_POST['version']) && is_numeric($_POST['version']) ? (int)$_POST['version'] : false;
 
-        if ( is_numeric($list_id) ) {
+        if (is_numeric($list_id)) {
             $this->outputListData($list_id, $version);
-        } elseif ( $list_id ) {
+        } elseif ($list_id) {
             // Probably url referring to an imported list
             try {
                 $import_manager = new Arlima_ImportManager($this->arlima_plugin);
@@ -553,25 +550,26 @@ class Arlima_WP_Ajax
     /**
      * Returns info about the version of this list
      * @param Arlima_List $list
-     * @param string $no_version_text[optional=''] The text returned if this is list is of no version
+     * @param string $no_version_text [optional=''] The text returned if this is list is of no version
      * @return string
      */
     private function getVersionInfo($list, $no_version_text = '')
     {
-        if( $list->isImported() ) {
-            return sprintf(__('Last modified %s a go', 'arlima'), human_time_diff($list->getVersionAttribute('created')));
+        if ($list->isImported()) {
+            return sprintf(__('Last modified %s a go', 'arlima'),
+                human_time_diff($list->getVersionAttribute('created')));
         } else {
-            if ( $list->getStatus() != Arlima_List::STATUS_EMPTY ) {
+            if ($list->getStatus() != Arlima_List::STATUS_EMPTY) {
                 $user_data = get_userdata($list->getVersionAttribute('user_id'));
                 $saved_since = '';
                 $saved_by = __('Unknown', 'arlima');
                 $lang_saved_since = __(' saved since ', 'arlima');
                 $lang_by = __(' by ', 'arlima');
 
-                if ( !empty($version['created']) ) {
+                if (!empty($version['created'])) {
                     $saved_since = $lang_saved_since . human_time_diff($version['created']);
                 }
-                if ( $user_data ) {
+                if ($user_data) {
                     $saved_by = $user_data->display_name;
                 }
 
@@ -590,13 +588,13 @@ class Arlima_WP_Ajax
      * @param int $list
      * @param int|false $version
      */
-    private function outputListData($list_id, $version=false)
+    private function outputListData($list_id, $version = false)
     {
         $builder = Arlima_List::builder()
-                    ->id($list_id)
-                    ->includeFutureArticles();
+            ->id($list_id)
+            ->includeFutureArticles();
 
-        if( $version == 'preview' ) {
+        if ($version == 'preview') {
             $builder->loadPreview();
         } else {
             $builder->version($version);
@@ -608,18 +606,16 @@ class Arlima_WP_Ajax
         $preview_width = '';
 
         // Get article width from a related page
-        if( $preview_page ) {
+        if ($preview_page) {
             $preview_url = get_permalink($preview_page->ID);
             $relation = $this->cms->getRelationData($preview_page->ID);
             $preview_width = $relation['attr']['width'];
-        }
-
-        // Get article width from a widget where the list is used
-        elseif( $widget = current($this->cms->loadRelatedWidgets($list)) ) {
+        } // Get article width from a widget where the list is used
+        elseif ($widget = current($this->cms->loadRelatedWidgets($list))) {
             $preview_width = $widget['width'];
         }
 
-        if( empty($preview_url) ) {
+        if (empty($preview_url)) {
             $preview_url = apply_filters('arlima_preview_url', '', $list);
         }
 
@@ -632,8 +628,9 @@ class Arlima_WP_Ajax
      * @param WP_Post|stdClass $post
      * @return mixed
      */
-    private function setupPostObject($post) {
-        if( is_object($post) && ($post->post_status == 'future' || $post->post_status == 'publish' || $post->post_status == 'draft') ) {
+    private function setupPostObject($post)
+    {
+        if (is_object($post) && ($post->post_status == 'future' || $post->post_status == 'publish' || $post->post_status == 'draft')) {
             $post->url = get_permalink($post->ID);
             $post->published = $this->cms->getPostTimeStamp($post);
             $post->display_date = $post->post_date;
@@ -651,17 +648,17 @@ class Arlima_WP_Ajax
     {
         $this->initAjaxRequest();
 
-        if( strpos($_POST['postid'], ',') !== false) {
+        if (strpos($_POST['postid'], ',') !== false) {
             $posts = array();
-            foreach(explode(',', $_POST['postid']) as $id) {
-                if( $p = $this->setupPostObject(get_post($id)) ) {
+            foreach (explode(',', $_POST['postid']) as $id) {
+                if ($p = $this->setupPostObject(get_post($id))) {
                     $posts[$p->ID] = $p;
                 }
             }
-            die(json_encode(array('posts'=>$posts)));
+            die(json_encode(array('posts' => $posts)));
         } else {
             $post_id = intval($_POST['postid']);
-            if( $p = $this->setupPostObject(get_post($post_id)) ) {
+            if ($p = $this->setupPostObject(get_post($post_id))) {
                 die(json_encode(array('posts' => array($p->ID => (array)$p))));
             }
         }
@@ -690,7 +687,7 @@ class Arlima_WP_Ajax
 
         $attachments = get_children($args);
 
-        if ( $attachments ) {
+        if ($attachments) {
             foreach ($attachments as $attachment) {
                 $images[] = array(
                     'attachment' => $attachment->ID,
@@ -711,16 +708,16 @@ class Arlima_WP_Ajax
     {
         $this->initAjaxRequest();
 
-        if( empty($_POST['attachment']) ) {
-            die(json_encode( array('error'=>'Argument attachment missing') ));
+        if (empty($_POST['attachment'])) {
+            die(json_encode(array('error' => 'Argument attachment missing')));
         }
-        if( empty($_POST['post']) || !is_numeric($_POST['post']) || !$_POST['post'] ) {
-            die(json_encode( array('error'=>'Argument post_id missing') ));
+        if (empty($_POST['post']) || !is_numeric($_POST['post']) || !$_POST['post']) {
+            die(json_encode(array('error' => 'Argument post_id missing')));
         }
 
         $attach = get_post($_POST['attachment']);
-        if( !$attach || $attach->post_type != 'attachment' ) {
-            die(json_encode( array('error'=>'Argument attachment is not referring to an attachment') ));
+        if (!$attach || $attach->post_type != 'attachment') {
+            die(json_encode(array('error' => 'Argument attachment is not referring to an attachment')));
         }
 
         wp_update_post(array(
@@ -728,7 +725,7 @@ class Arlima_WP_Ajax
             'post_parent' => $_POST['post']
         ));
 
-        echo json_encode(array('success'=>1));
+        echo json_encode(array('success' => 1));
         die;
     }
 
@@ -738,13 +735,13 @@ class Arlima_WP_Ajax
 
         $attachment_id = $_POST['attachment'];
 
-        if ( Arlima_WP_Plugin::isScissorsInstalled() ) {
+        if (Arlima_WP_Plugin::isScissorsInstalled()) {
 
             $scissors_output = '';
             $thumb = get_post($attachment_id);
             $scissors_output = scissors_media_meta($scissors_output, $thumb);
 
-            if ( !empty($scissors_output) ) {
+            if (!empty($scissors_output)) {
                 echo $scissors_output;
             }
         }
@@ -759,20 +756,21 @@ class Arlima_WP_Ajax
         $this->initAjaxRequest();
 
         $catid = !empty($_POST['catid']) ? $_POST['catid'] : false;
+        $posttype = !empty($_POST['posttype']) ? $_POST['posttype'] : null;
         $search = !empty($_POST['search']) ? $_POST['search'] : false;
         $author = !empty($_POST['author']) ? $_POST['author'] : false;
         $offset = !empty($_POST['offset']) && is_numeric($_POST['offset']) ? (int)$_POST['offset'] : 0;
 
-        if ( $catid ) {
+        if ($catid) {
             $args['cat'] = $catid;
         }
-        if ( $author ) {
+        if ($author) {
             $args['author'] = $author;
         }
 
         $args['s'] = '';
-        if ( $search ) {
-            if ( is_numeric($search) ) {
+        if ($search) {
+            if (is_numeric($search)) {
                 $args['p'] = $search;
             } else {
                 $args['s'] = $search;
@@ -780,12 +778,16 @@ class Arlima_WP_Ajax
         }
 
         $args['numberposts'] = 10;
-        if ( $offset ) {
+        if ($offset) {
             $args['offset'] = $offset;
         }
 
         $args['post_status'] = array('publish', 'future');
         $args['post_type'] = apply_filters('arlima_search_post_types', array('post', 'page'));
+
+        if ($posttype) {
+            $args['post_type'] = $posttype;
+        }
 
         // Possibly modified by other plugins or the theme (take a look at readme.txt for more info)
         $args = Arlima_PostSearchModifier::filterWPQuery($args, $_POST);
@@ -830,13 +832,13 @@ class Arlima_WP_Ajax
         // down, it results in up towards 10 possibly extra db queries
 
         $versions = array();
-        if( $list->isImported() ) {
-            foreach($list->getPublishedVersions() as $ver) {
+        if ($list->isImported()) {
+            foreach ($list->getPublishedVersions() as $ver) {
                 $ver['saved_by'] = 'Unknown';
                 $versions[] = $ver;
             }
         } else {
-            foreach($list->getPublishedVersions() as $ver) {
+            foreach ($list->getPublishedVersions() as $ver) {
                 $user_data = get_userdata($ver['user_id']);
                 $ver['saved_by'] = $user_data ? $user_data->display_name : __('Unknown', 'arlima');
                 $versions[] = $ver;
@@ -844,7 +846,7 @@ class Arlima_WP_Ajax
         }
 
         $articles = array();
-        foreach($list->getArticles() as $art) {
+        foreach ($list->getArticles() as $art) {
             $articles[] = $art->toArray();
         }
 
