@@ -1,5 +1,5 @@
 {
-    "name":        "wp-newslist",
+    "name":        "elseifab/wp-newslist",
     "type":        "wordpress-plugin",
     "description": "Wordpress plugin - read more at https://github.com/elseifab/wp-newslist",
     "homepage":    "https://github.com/elseifab/wp-newslist",
