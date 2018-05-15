@@ -914,6 +914,7 @@ class Arlima_WP_Plugin
             $style_sheets = $this->getTemplateStylesheets();
             if( !empty($style_sheets) ) {
                 $tmpl_typo_css = basename(ARLIMA_PLUGIN_PATH) .'/css/template-typo.css'; // File only used in preview
+                $tmpl_typo_css = 'arlima/css/template-typo.css'; // File only used in preview
                 foreach($style_sheets as $i => $css) {
                     if( strpos($css, $tmpl_typo_css) === false ) {
                         wp_register_style('arlima_template_css_'.$i, $css, array(), ARLIMA_FILE_VERSION);
