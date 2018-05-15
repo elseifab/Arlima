@@ -1,6 +1,7 @@
 <?php
 /*
  * Plugin Name: wp-newslist
+ * Description: Manage lists of posts in your WordPress environment (Arlima fork)
  * Version: 3.2
  * GitHub Plugin URI: elseifab/wp-newslist
  */
